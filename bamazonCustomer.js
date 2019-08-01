@@ -2,9 +2,6 @@ var mysql = require("mysql");
 
 var inquirer = require("inquirer");
 
-var userID;
-var userQuantity;
-
 let connection = mysql.createConnection( {
     host: "localhost",
     port: 8889,
@@ -24,9 +21,9 @@ function displayItems() {
     connection.query("SELECT * FROM products", function(err, res) {
       if (err) throw err;
       for (var i = 0; i < res.length; i++) {
-        console.log(res[i].Item_ID + "  | " + res[i].Product_Name + " | $" + res[i].Price + " | " + res[i].Stock_Quantity); 
+        console.log(res[i].Item_ID + "  | " + res[i].Product_Name + " | Price: $" + res[i].Price + " | Qty: " + res[i].Stock_Quantity); 
+        console.log("---------------------------------------------------------");
       }
-      console.log("---------------------------------------------------------");
 
       inquirer
       .prompt([
@@ -34,6 +31,7 @@ function displayItems() {
           name: "ID",
           type: "input",
           message: "What item would you like (Enter the ID number)?"
+          
         },
         {
           name: "Quantity",
@@ -54,13 +52,16 @@ function displayItems() {
         var itemsOrdered = parseInt(userInput.Quantity);
         var userID = userInput.ID
 
-        connection.query("SELECT Stock_Quantity FROM products WHERE Item_ID = ?",[userID], function(err, res){
+        connection.query("SELECT Stock_Quantity, Price FROM products WHERE Item_ID = ?",[userID], function(err, res){
     
+          itemPrice = res[0].Price
           itemCount = res[0].Stock_Quantity,
-          itemsRemaining = itemCount - itemsOrdered;
-          console.log(itemCount)
-          console.log(userID)
-          console.log(itemsRemaining)
+          itemsRemaining = itemCount - itemsOrdered
+          totalPrice = (itemPrice * userInput.Quantity).toFixed(2)
+          console.log("Your total is: " + totalPrice)
+          // console.log(itemCount)
+          // console.log(userID)
+          // console.log(itemsRemaining)
        
         connection.query(
           "UPDATE products SET ? WHERE ?",
