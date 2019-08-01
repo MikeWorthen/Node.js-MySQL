@@ -47,36 +47,22 @@ function displayItems() {
           default: true,
         }
       ])
+
       .then(function(userInput) {
         var itemCount;
-        var total; 
         var itemsRemaining;
         var itemsOrdered = parseInt(userInput.Quantity);
         var userID = userInput.ID
 
-        for (var i = 0; i < res.length; i++) {     
-          console.log("DB Info: ", res[i].Stock_Quantity)    
-            itemCount = +res[i].Stock_Quantity;
-            itemsRemaining = itemCount - itemsOrdered;
-            
-            // total = parseInt(+(res[i].Price) * itemsOrdered);
-        }
-        console.log(itemCount)
-        console.log(userID)
-        console.log(itemsRemaining)
-        // get the information of the chosen item
-        // if(userInput.confirm) {
-        // userID = userInput.ID
-        // userQuantity = userInput.Quantity
-        
-        // console.log("\nYou've chosen Id number " + userID);
-        // console.log("Chosen quantity is " + userQuantity);  
-        // }else{
-        //   console.log("Transaction did not go through")
-        // }
-
+        connection.query("SELECT Stock_Quantity FROM products WHERE Item_ID = ?",[userID], function(err, res){
+    
+          itemCount = res[0].Stock_Quantity,
+          itemsRemaining = itemCount - itemsOrdered;
+          console.log(itemCount)
+          console.log(userID)
+          console.log(itemsRemaining)
+       
         connection.query(
-          
           "UPDATE products SET ? WHERE ?",
           [
             {
@@ -87,6 +73,7 @@ function displayItems() {
             }
           ],
         )
+      })
       });   
   });
 }
