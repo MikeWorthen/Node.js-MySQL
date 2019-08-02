@@ -58,7 +58,7 @@ function displayItems() {
           itemCount = res[0].Stock_Quantity,
           itemsRemaining = itemCount - itemsOrdered
           totalPrice = (itemPrice * userInput.Quantity).toFixed(2)
-          console.log("Your total is: " + totalPrice)
+          console.log("Yourtotal is: " + totalPrice)
           // console.log(itemCount)
           // console.log(userID)
           // console.log(itemsRemaining)
